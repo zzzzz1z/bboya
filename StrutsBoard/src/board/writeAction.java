@@ -73,7 +73,7 @@ public class writeAction extends ActionSupport {
 			String file_ext=getUploadFileName().substring(getUploadFileName().lastIndexOf('.')+1,getUploadFileName().length());
 			
 			//서버에 파일 저장
-			File destFile
+			//File destFile
 		}
 	}
 
