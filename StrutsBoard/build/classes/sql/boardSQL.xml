@@ -24,13 +24,13 @@
 
 	<!-- 공통으로 사용할 where-no 절 정의 -->
 	<sql id="where-no">
-		where no=#no#
+		WHERE no=#no#
 	</sql>
 
 	<!-- select 쿼리문 정의 -->
 	<select id="selectAll" resultMap="boardRes">
 		<include refid="select-all" />
-		order by no desc
+		ORDER BY no desc
 	</select>
 
 	<select id="selectOne" resultMap="boardRes" parameterClass="int">
@@ -51,7 +51,7 @@
 	<!-- insert 쿼리문 정의 -->
 	<insert id="insertBoard" parameterClass="board">
 		insert into
-		sboard_bb(no,password, content, regdate)
+		sboard_bb(no,subject, name, password, content, regdate)
 		values(sboard_no_seq.nextval,#subject#, #name#, #password#, #content#, #regdate#)
 	</insert>
 
