@@ -25,22 +25,54 @@
 		SELECT * FROM SBOARD_BB
 	</sql>
 
+	<sql id="select-com">
+		SELECT * FROM BOARDC_BB
+	</sql>
 	<!-- 공통으로 사용할 where-no 절 정의 -->
 	<sql id="where-no">
 		WHERE no=#no#
 	</sql>
 
 	<!-- select 쿼리문 정의 -->
+	<!-- 답변글 로직으로 수정시작 -->
 	<select id="selectAll" resultMap="boardRes">
 		<include refid="select-all" />
 		ORDER BY ref desc,re_step asc
 	</select>
+	<!-- 답변글 로직으로 수정끝 -->
 
+	<select id="commentSelectAll" resultMap="commentRes"
+		parameterClass="int">
+		SELECT * FROM BOARDC_BB
+		WHERE originno=#no#
+		order by no
+		desc
+	</select>
 	<select id="selectOne" resultMap="boardRes" parameterClass="int">
 		<include refid="select-all" />
 		<include refid="where-no" />
 	</select>
 
+	<!-- 검색로직 추가시작 -->
+	<select id="selectSearchW" resultMap="boardRes" parameterClass="String">
+		<include refid="select-all" />
+		WHERE name like #searchKeyword#
+		order by no desc
+	</select>
+
+	<select id="selectSearchS" resultMap="boardRes" parameterClass="String">
+		<include refid="select-all" />
+		where subject like #searchKeyword#
+		order by no desc
+	</select>
+
+	<select id="selectSearchC" resultMap="boardRes" parameterClass="String">
+		<include refid="select-all" />
+		where content like # searchKeyword#
+		order by no desc
+	</select>
+
+	<!-- 검색로직 끝 -->
 	<select id="selectLastNo" resultClass="board">
 		SELECT max(no) as no FROM
 		SBOARD_BB
@@ -55,8 +87,10 @@
 	<!-- insert 쿼리문 정의 -->
 	<insert id="insertBoard" parameterClass="board">
 		INSERT INTO
-		SBOARD_BB (NO,SUBJECT,NAME,PASSWORD,CONTENT,REGDATE,RE_STEP,RE_LEVEL,REF)
-		VALUES(SBOARD_BB_NO_SEQ.NEXTVAL,#subject#, #name#,#password#,#content#,#regdate#,#re_step#,#re_level#,SBOARD_BB_NO_SEQ.CURRVAL)
+		SBOARD_BB
+		(NO,SUBJECT,NAME,PASSWORD,CONTENT,REGDATE,RE_STEP,RE_LEVEL,REF)
+		VALUES(SBOARD_BB_NO_SEQ.NEXTVAL,#subject#,
+		#name#,#password#,#content#,#regdate#,#re_step#,#re_level#,SBOARD_BB_NO_SEQ.CURRVAL)
 	</insert>
 
 	<insert id="insertBoardReply" parameterClass="board">
