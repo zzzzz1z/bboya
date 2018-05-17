@@ -10,31 +10,36 @@
 	type="text.css">
 
 <script type="text/javascript">
-	 	function validation() {
+	function validation() {
 
-	 var frm = document.forms[0];
+		var frm = document.forms[0];
 
-	 if (frm.subject.value == "") {
-	 alert("제목을 입력해주세요.");
-	 return false;
-	 }
+		if (frm.subject.value == "") {
+			alert("제목을 입력해주세요.");
+			return false;
+		}
 
-	 else if (frm.name.value == "") {
-	 alert("이름을 입력해주세요.");
-	 return false;
-	 }
+		else if (frm.name.value == "") {
+			alert("이름을 입력해주세요.");
+			return false;
+		}
 
-	 else if (frm.password.value == "") {
-	 alert("비밀번호를 입력해주세요.");
-	 return false;
-	 }
+		else if (frm.password.value == "") {
+			alert("비밀번호를 입력해주세요.");
+			return false;
+		}
 
-	 else if (frm.content.value == "") {
-	 alert("내용을 입력해주세요.");
-	 return false;
-	 }
-	 return true;
-	 }
+		else if (frm.content.value == "") {
+			alert("내용을 입력해주세요.");
+			return false;
+		}
+		return true;
+	}
+	
+	${document}.ready(function(){
+		$("#content").cleditor();
+	});
+	
 </script>
 </head>
 <body>
@@ -43,10 +48,19 @@
 			<td align=center><h2>스트럿츠2 게시판</h2></td>
 		</tr>
 	</table>
-	<s:if test="resultClass==NULL">
+
+	<s:if test="reply">
+		<form action="replyAction.action" method=post
+			enctype="multipart.form-data" ansubmit="return validation();">
+			<s:hidden name="ref" value="%{resultClass.ref}" />
+			<s:hidden name="re_step" value="%{resultClass.re_Step}" />
+			<s:hidden name="re_level" value="%{resultClass.re_level}" />
+	</s:if>
+
+	<s:elseif test="resultClass==NULL">
 		<form action="writeAction.action" method=post
 			enctype="multipart/form-data" onsubmit="return validation();">
-	</s:if>
+	</s:elseif>
 
 	<s:else>
 		<form action="modifyAction.action" method="post"

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.util.HashMap" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -42,40 +44,55 @@
 				</s:param>
 			</s:url>
 
-			<tr bgcolor="#FFFFFF" align=center>
+			<tr>
 				<td><s:property value="no" /></td>
-				<td align="left">&nbsp;<s:a href="%{viewURL}">
+				<td align="left"><s:if test="re_level != 0">
+						<c:forEach var="i" begin="${re_level}" end="0">&nbsp;</c:forEach>→
+				</s:if> <s:a href="%{viewURL}">
 						<s:property value="subject" />
-					</s:a>
-				</td>
-				<td align=center><s:property value="name" /></td>
-				<td align=center><s:property value="regdate" /></td>
+					</s:a></td>
+				<td><s:property value="name" /></td>
+				<td><s:property value="regdate" /></td>
 				<td><s:property value="readhit" /></td>
 			</tr>
+
 			<tr bgcolor="#777777">
-				<td height=1 colspan=5></td>
+				<td height="1" colspan="5"></td>
 			</tr>
+
 		</s:iterator>
 
 		<s:if test="list.size() <= 0">
-			<tr bgcolor="#FFFFFF" align=center>
-				<td colspan=5>등록된 게시물이 없습니다.</td>
-			</tr>
-			<tr bgcolor="#777777">
-				<td height=1 colspan=5></td>
+			<tr>
+				<td colspan="5" align="center">등록된 게시물이 없습니다</td>
 			</tr>
 		</s:if>
-		<tr align=center>
-			<td colspan=5><s:property value="pagingHtml" escape="false" /></td>
+
+		<tr align="center">
+			<td colspan="5"><s:property value="pagingHtml" escape="false" /></td>
 		</tr>
 
-		<tr align=right>
-			<td colspan=5><input type=button value="글쓰기" class="inputb"
-				onClick="javascript:location.href='writeForm.action?currentPage=<s:property value="currentPage"/>';">
+		<tr align="right">
+			<td colspan="5"><input type="button" value="글쓰기" class="inputb"
+				onClick="javascript:location.href='writeForm.action?currentPage=<s:property value="currentPage" />';" />
+			</td>
+		</tr>
+
+		<tr align="center">
+			<td colspan="5">
+				<form>
+					<select name="searchNum">
+						<option value="0">작성자</option>
+						<option value="1">제목</option>
+						<option value="2">내용</option>
+					</select>
+					<s:textfield name="searchKeyword" theme="simple" value=""
+						cssStyle="width:120px" maxlength="20" />
+					<input name="submit" type="submit" value="검색" class="inputb">
+				</form>
 			</td>
 		</tr>
 	</table>
-
 </body>
 </html>
 

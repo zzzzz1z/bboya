@@ -44,7 +44,7 @@ public class deleteAction extends ActionSupport {
 
 		return SUCCESS;
 	}
-
+	
 	public boardVO getParamClass() {
 		return paramClass;
 	}

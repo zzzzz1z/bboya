@@ -36,6 +36,12 @@ public class writeAction extends ActionSupport {
 	private String uploadFileName; // 파일 이름
 	private String fileUploadPath = "C:\\java\\upload\\"; // 업로드 경로
 
+	private int ref;
+	private int re_step;
+	private int re_level;
+
+	boolean reply = false;
+
 	// 생성자
 	public writeAction() throws IOException {
 		reader = Resources.getResourceAsReader("sqlMapConfig.xml"); // sqlMapConfig.xml 파일의 설정 내용을 가져온다.
@@ -48,12 +54,44 @@ public class writeAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	public String reply() throws Exception {
+
+		reply = true;
+		// 리절트 객체 생성
+		resultClass = new boardVO();
+
+		// 등록한 sql 가져오기
+		resultClass = (boardVO) sqlMapper.queryForObject("selectOne", getNo());
+		resultClass.setSubject("[답변]" + resultClass.getSubject());
+		resultClass.setName(getName());
+		resultClass.setPassword(getPassword());
+		resultClass.setContent(getContent());
+		resultClass.setFile_orgname(null);
+		resultClass.setFile_savname(null);
+
+		return SUCCESS;
+	}
+
 	public String execute() throws Exception {
 
 		// 파라미터와 리절트 객체 생성
 		paramClass = new boardVO();
 		resultClass = new boardVO();
 
+		if(ref==0) {
+			paramClass.setRe_step(0);
+			paramClass.setRe_level(0);
+		}
+		else {
+			paramClass.setRef(getRef());
+			paramClass.setRe_step(getRe_step());
+			sqlMapper.update("updateReplyStep",paramClass);
+			
+			paramClass.setRe_step(getRe_step()+1);
+			paramClass.setRe_level(getRe_level()+1);
+			paramClass.setRef(getRef());
+		}
+		
 		// 등록할 항목 설정
 		paramClass.setSubject(getSubject());
 		paramClass.setName(getName());
@@ -62,7 +100,10 @@ public class writeAction extends ActionSupport {
 		paramClass.setRegdate(today.getTime());
 
 		// 등록 쿼리 수행
-		sqlMapper.insert("insertBoard", paramClass);
+		if (ref == 0)
+			sqlMapper.insert("insertBoard", paramClass);
+		else
+			sqlMapper.insert("insertBoardReply", paramClass);
 
 		// 첨부파일을 선택했다면 파일을 업로드한다.
 		if (getUpload() != null) {
@@ -209,6 +250,38 @@ public class writeAction extends ActionSupport {
 
 	public void setFileUploadPath(String fileUploadPath) {
 		this.fileUploadPath = fileUploadPath;
+	}
+
+	public int getRef() {
+		return ref;
+	}
+
+	public void setRef(int ref) {
+		this.ref = ref;
+	}
+
+	public int getRe_step() {
+		return re_step;
+	}
+
+	public void setRe_step(int re_step) {
+		this.re_step = re_step;
+	}
+
+	public int getRe_level() {
+		return re_level;
+	}
+
+	public void setRe_level(int re_level) {
+		this.re_level = re_level;
+	}
+
+	public boolean isReply() {
+		return reply;
+	}
+
+	public void setReply(boolean reply) {
+		this.reply = reply;
 	}
 
 }
